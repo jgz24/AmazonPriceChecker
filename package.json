@@ -1,0 +1,16 @@
+{
+  "name": "amazon_price_checker",
+  "version": "1.0.0",
+  "description": "Webpage that displays amazon prices",
+  "main": "server.js",
+  "scripts": {
+    "start": "echo \"Error: no test specified\""
+  },
+  "author": "Julius Guzman",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.6.5",
+    "nodemon": "^1.19.1"
+  }
+}
