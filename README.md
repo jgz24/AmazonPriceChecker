@@ -1,1 +1,1 @@
-# AmazonPriceCheck
+# AmazonPriceChecker
