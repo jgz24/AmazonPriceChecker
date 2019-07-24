@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 //Route that handles /items requests
 const itemRoutes = require("./api/routes/itemsRoute");
 //Route that handles /signup request
-const userRoutes = require("./api/routes/usersRoute");
+//const userRoutes = require("./api/routes/usersRoute");
 
 // Connect to the database
 mongoose.connect(
@@ -18,6 +18,8 @@ mongoose.connect(
   }
 );
 
+//Checks public folder
+app.use(express.static('public'));
 //Extracts url encoded data and makes it easily readable
 app.use(bodyParser.urlencoded({ extended: false }));
 //Extracts json data and makes it easily readable
@@ -45,7 +47,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/items", itemRoutes);
-app.use("/users", userRoutes);
+//app.use("/users", userRoutes);
 
 //Error handling if we didn't find a valid route
 app.use((req, res, next) => {

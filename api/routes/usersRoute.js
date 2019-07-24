@@ -1,3 +1,4 @@
+/*
 const express = require("express");
 const router = express.Router();
 
@@ -13,3 +14,4 @@ router.post("/login", userController.user_login);
 router.delete("/:userId", userController.delete_user);
 
 module.exports = router;
+*/

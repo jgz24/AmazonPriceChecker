@@ -1,22 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta http-equiv="X-UA-Compatible" content="ie-edge" />
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <title>Amazon Price Checker</title>
-    </head>
-    
-    <body>
-        <div style="text-align:center">
-            <form action="/" method="POST" class="mb-4">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" name="username" class="form-control">
-                </div>
-            </form>
-        </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie-edge" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <title>Amazon Price Checker</title>
+  </head>
 
-    </body>
+  <body>
+    <div style="text-align:center">
+      <h1>Amazon Price Checker</h1>
+      <div>
+        <form class="form-group" method="POST" action="/items">
+          <label for="url">Enter an amazon item URL:</label>
+          <input type="name" name="name" id="name" class="form-control" value="google"/><br/>
+          <input type="url" name="url" id="urlId" class="form-control" value="https://www.newegg.com/amd-ryzen-5-2600/p/N82E16819113496?Description=ryzen%205%202600&cm_re=ryzen_5_2600-_-19-113-496-_-Product"/><br/>
+          <input type="price" name="currentPrice" id="currentPrice" class="form-control" value="123"/><br/>
+          <input type="submit" value="Submit">
+        </form>
+      </div>
+    </div>
+  </body>
 </html>
