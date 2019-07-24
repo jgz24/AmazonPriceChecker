@@ -1,11 +1,9 @@
-const express = require("express");
-const router = express.Router();
 const mongoose = require("mongoose");
 
-const Item = require("../models/item");
+const Item = require("../models/itemsModel");
 
-//Handles /items get requests
-router.get("/", (req, res, next) => {
+//Function for getting all items
+exports.get_all_items = (req, res, next) => {
   Item.find()
     .select("name url currentPrice _id")
     .exec()
@@ -33,10 +31,10 @@ router.get("/", (req, res, next) => {
         error: err
       });
     });
-});
+};
 
-//Handles /items post requests
-router.post("/", (req, res, next) => {
+//Function to post an item
+exports.post_item = (req, res, next) => {
   /*
    *Create a new Mongoose model.
    *With body-parser can create objects
@@ -76,10 +74,10 @@ router.post("/", (req, res, next) => {
         error: err
       });
     });
-});
+};
 
-//Handles /items delete requests
-router.delete("/:itemId", (req, res, next) => {
+//Function to delete an item
+exports.delete_item = (req, res, next) => {
   const id = req.params.itemId;
   Item.deleteOne({ _id: id })
     .exec()
@@ -99,10 +97,10 @@ router.delete("/:itemId", (req, res, next) => {
         error: err
       });
     });
-});
+};
 
-//Handles /items patch requests
-router.patch("/:itemId", (req, res, next) => {
+//Function to update an item
+exports.update_item = (req, res, next) => {
   const id = req.params.itemId;
   const update = {};
   //Limits the patching to the known
@@ -128,10 +126,10 @@ router.patch("/:itemId", (req, res, next) => {
         error: err
       });
     });
-});
+};
 
-//Handles specific item get requests
-router.get("/:itemId", (req, res, next) => {
+//Function that handles get requests for individual items
+exports.get_item = (req, res, next) => {
   const id = req.params.itemId;
   Item.findById(id)
     .select("name url currentPrice _id")
@@ -154,6 +152,4 @@ router.get("/:itemId", (req, res, next) => {
       console.log(err);
       res.status(500).json({ error: error });
     });
-});
-
-module.exports = router;
+};

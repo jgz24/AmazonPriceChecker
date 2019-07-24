@@ -1,12 +1,10 @@
-const express = require("express");
-const router = express.Router();
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 
-const User = require("../models/user");
+const User = require("../models/usersModel");
 
-router.post("/signup", (req, res, next) => {
+//Function that signs up a user
+exports.sign_up = (req, res, next) => {
   User.findOne({ email: req.body.email })
     .exec()
     .then(user => {
@@ -52,9 +50,10 @@ router.post("/signup", (req, res, next) => {
       }
     })
     .catch();
-});
+};
 
-router.post("/login", (req, res, next) => {
+//Function that signs in a user
+exports.user_login = (req, res, next) => {
   User.findOne({ email: req.body.email })
     .exec()
     .then(user => {
@@ -70,19 +69,8 @@ router.post("/login", (req, res, next) => {
           });
         }
         if (result) {
-          const token = jwt.sign(
-            {
-              email: user.email,
-              userId: user.id
-            },
-            process.env.JWT_KEY,
-            {
-              expiresIn: "1h"
-            }
-          );
           return res.status(200).json({
-            message: "Authorization successful",
-            token: token
+            message: "Authorization successful"
           });
         }
         res.status(401).json({
@@ -96,9 +84,10 @@ router.post("/login", (req, res, next) => {
         error: err
       });
     });
-});
+};
 
-router.delete("/:userId", (req, res, next) => {
+//Function that deletes a user's account
+exports.delete_user = (req, res, next) => {
   User.deleteOne({ _id: req.params.userId })
     .exec()
     .then(result => {
@@ -112,6 +101,4 @@ router.delete("/:userId", (req, res, next) => {
         error: err
       });
     });
-});
-
-module.exports = router;
+};

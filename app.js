@@ -4,9 +4,9 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
 //Route that handles /items requests
-const itemRoutes = require("./api/routes/items");
+const itemRoutes = require("./api/routes/itemsRoute");
 //Route that handles /signup request
-const userRoutes = require("./api/routes/users");
+const userRoutes = require("./api/routes/usersRoute");
 
 // Connect to the database
 mongoose.connect(
