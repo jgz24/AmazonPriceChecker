@@ -47,7 +47,8 @@ exports.post_item = (req, res, next) => {
     const productInfo = await page.evaluate(() => {
       return {
         name: document.querySelector("#productTitle").innerText,
-        currentPrice: document.querySelector("#priceblock_ourprice").innerText
+        currentPrice: document.querySelector("#priceblock_ourprice").innerText,
+        img: document.querySelector(".imgTagWrapper").children[0].currentSrc
       };
     });
 
@@ -64,7 +65,8 @@ exports.post_item = (req, res, next) => {
       _id: new mongoose.Types.ObjectId(),
       name: productInfo["name"],
       url: url,
-      currentPrice: productInfo["currentPrice"]
+      currentPrice: productInfo["currentPrice"],
+      img: productInfo["img"]
     });
     //Mongoose method that can be used on mongoose
     //models to save to the database
@@ -78,6 +80,7 @@ exports.post_item = (req, res, next) => {
             name: result.name,
             url: result.url,
             currentPrice: result.currentPrice,
+            img: result.img,
             _id: result._id,
             request: {
               type: "POST",

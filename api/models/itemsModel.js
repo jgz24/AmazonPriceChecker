@@ -16,6 +16,10 @@ const itemSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  img: {
+    type: String,
+    require: true
+  },
   create_date: {
     type: Date,
     default: Date.now
