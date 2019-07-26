@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const request = require('request');
-const cheerio = require('cheerio');
+const request = require("request");
+const puppeteer = require("puppeteer");
 
 const Item = require("../models/itemsModel");
 
@@ -37,61 +37,62 @@ exports.get_all_items = (req, res, next) => {
 
 //Function to post an item
 exports.post_item = (req, res, next) => {
-  //const url = req.body.url;
-  const url = 'https://www.newegg.com/amd-ryzen-5-2600/p/N82E16819113496?Description=ryzen%205%202600&cm_re=ryzen_5_2600-_-19-113-496-_-Product';
-  request(url, (error, response, html) => {
-    if(!error && response.statusCode == 200) {
-      const $ = cheerio.load(html);
+  const url = req.body.url;
 
-      const name = $('.objImages').find('span').children('img').attr('title');
-      const image = $('.objImages').find('span').children('img').attr('src');
-      const currentPrice = $('#continueReal');
+  (async () => {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto(url);
 
-      console.log(name);
-      console.log(image);
-      console.log(currentPrice.html());
-    }
-
-  });
-  /*
-   *Create a new Mongoose model.
-   *With body-parser can create objects
-   *that have body property that can extract
-   *different properties depending on data received.
-   *
-   */
-  const item = new Item({
-    _id: new mongoose.Types.ObjectId(),
-    name: req.body.name,
-    url: req.body.url,
-    currentPrice: req.body.currentPrice
-  });
-  //Mongoose method that can be used on mongoose
-  //models to save to the database
-  item
-    .save()
-    .then(result => {
-      console.log(result);
-      res.status(201).json({
-        message: "Created item sucessfully",
-        createdItem: {
-          name: result.name,
-          url: result.url,
-          currentPrice: result.currentPrice,
-          _id: result._id,
-          request: {
-            type: "POST",
-            appItemUrl: "http://localhost:3000/items/" + result._id
-          }
-        }
-      });
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json({
-        error: err
-      });
+    const productInfo = await page.evaluate(() => {
+      return {
+        name: document.querySelector("#productTitle").innerText,
+        currentPrice: document.querySelector("#priceblock_ourprice").innerText
+      };
     });
+
+    await browser.close();
+
+    /*
+     *Create a new Mongoose model.
+     *With body-parser can create objects
+     *that have body property that can extract
+     *different properties depending on data received.
+     *
+     */
+    const item = new Item({
+      _id: new mongoose.Types.ObjectId(),
+      name: productInfo["name"],
+      url: url,
+      currentPrice: productInfo["currentPrice"]
+    });
+    //Mongoose method that can be used on mongoose
+    //models to save to the database
+    item
+      .save()
+      .then(result => {
+        console.log(result);
+        res.status(201).json({
+          message: "Created item sucessfully",
+          createdItem: {
+            name: result.name,
+            url: result.url,
+            currentPrice: result.currentPrice,
+            _id: result._id,
+            request: {
+              type: "POST",
+              appItemUrl: "http://localhost:3000/items/" + result._id
+            }
+          }
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json({
+          error: err
+        });
+      });
+  })();
 };
 
 //Function to delete an item

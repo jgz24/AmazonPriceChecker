@@ -13,7 +13,7 @@ const itemSchema = new mongoose.Schema({
     required: true
   },
   currentPrice: {
-    type: Number,
+    type: String,
     required: true
   },
   create_date: {
