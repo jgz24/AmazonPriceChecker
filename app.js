@@ -19,7 +19,7 @@ mongoose.connect(
 );
 
 //Checks public folder
-app.use(express.static('public'));
+app.use(express.static("public"));
 //Extracts url encoded data and makes it easily readable
 app.use(bodyParser.urlencoded({ extended: false }));
 //Extracts json data and makes it easily readable

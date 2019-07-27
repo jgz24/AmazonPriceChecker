@@ -7,7 +7,7 @@ const Item = require("../models/itemsModel");
 //Function for getting all items
 exports.get_all_items = (req, res, next) => {
   Item.find()
-    .select("name url currentPrice _id")
+    .select("name url currentPrice img _id")
     .exec()
     .then(docs => {
       const response = {
@@ -17,6 +17,7 @@ exports.get_all_items = (req, res, next) => {
             name: doc.name,
             url: doc.url,
             currentPrice: doc.currentPrice,
+            img: doc.img,
             _id: doc._id,
             request: {
               type: "GET",
