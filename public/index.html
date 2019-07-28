@@ -50,8 +50,15 @@
       $(document).ready(() => {
         const itemsDisplay = $('#itemDisplay');
 
-        const buildTemplate = (item) => {
-          return `<li class="list-group-item" id="${item._id}">
+        const buildIds = (item) => {
+          return {
+            listItemId: "ListItem_" + item._id,
+            deleteId: "Delete_" + item._id
+          }
+        }
+
+        const buildTemplate = (item,id) => {
+          return `<li class="list-group-item" id="${id.listItemId}">
                     <div class="row">
                         <div class="col-md-2">${item.name}</div>
                         <div class="col-md-2">Price: ${item.currentPrice}</div>
@@ -63,7 +70,7 @@
                           <input type="submit" value="View on Amazon" />
                         </form></div>
                         <div class="col-md-2">
-                          <button type="button" id="${item._id}">Delete Item</button>
+                          <button type="button" id="${id.deleteId}">Delete Item</button>
                         </div>
 
                   </li>`
@@ -71,8 +78,9 @@
 
         const displayItems = (data) => {
           data.forEach((item) => {
-            itemsDisplay.append(buildTemplate(item));
-            deleteItem(item);
+            const ids = buildIds(item);
+            itemsDisplay.append(buildTemplate(item,ids));
+            deleteItem(item, ids.listItemId, ids.deleteId);
           })
         }
 
@@ -82,7 +90,6 @@
           .then((response)=> {
             return response.json();
           }).then((data) => {
-            console.log(data.items);
             displayItems(data.items);
           })
         }
@@ -90,16 +97,20 @@
         getItems();
 
         //Delete item from database
-        const deleteItem = (item) => {
-          console.log(item._id);
-          let deleteBtn = $(`${item._id}`);
-          console.log("btn" + deleteBtn);
+        const deleteItem = (item, listItemId, deleteId) => {
+          let deleteBtn = $(`#${deleteId}`);
           deleteBtn.click(() => {
-            fetch(`/${item._id}`, {
+            const confirmDelete = confirm("Delete Item?");
+            if(confirmDelete) {
+              fetch(`items/${item._id}`, {
               method: "delete"
             }).then ((response) => {
+              if(response.status == 200) {
+                $(`#${listItemId}`).remove();
+              }
               return response.json();
             })
+            }
           })
         }
 
