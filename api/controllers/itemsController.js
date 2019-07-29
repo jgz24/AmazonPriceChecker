@@ -124,31 +124,41 @@ exports.delete_item = (req, res, next) => {
 
 //Function to update an item
 exports.update_item = (req, res, next) => {
-  const id = req.params.itemId;
-  const update = {};
-  //Limits the patching to the known
-  //properties we have. Doesn't allow
-  //new properties to be added.
-  for (const ops of req.body) {
-    update[ops.propName] = ops.value;
-  }
-  Item.update({ _id: id }, { $set: update })
-    .exec()
-    .then(result => {
-      res.status(200).json({
-        message: "Item updated",
-        request: {
-          type: "GET",
-          appItemUrl: "http://localhost:3000/items/" + id
-        }
-      });
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json({
-        error: err
-      });
+  const id = req.body._id;
+  const url = req.body.url;
+
+  (async () => {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto(url);
+
+    const productInfo = await page.evaluate(() => {
+      return {
+        currentPrice: document.querySelector("#priceblock_ourprice").innerText
+      };
     });
+
+    await browser.close();
+
+    Item.updateOne({ _id: id }, { $set: productInfo })
+      .exec()
+      .then(result => {
+        res.status(200).json({
+          message: "Item updated",
+          request: {
+            updatedPrice: productInfo["currentPrice"],
+            type: "GET",
+            appItemUrl: "http://localhost:3000/items/" + id
+          }
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json({
+          error: err
+        });
+      });
+  })();
 };
 
 //Function that handles get requests for individual items

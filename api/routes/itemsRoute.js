@@ -13,7 +13,7 @@ router.post("/", itemController.post_item);
 router.delete("/:itemId", itemController.delete_item);
 
 //Handles /items patch requests
-router.patch("/:itemId", itemController.update_item);
+router.put("/:itemId", itemController.update_item);
 
 //Handles specific item get requests
 router.get("/:itemId", itemController.get_item);

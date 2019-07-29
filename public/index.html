@@ -22,12 +22,14 @@
               <div class="col-lg-8">
                   <form class="form-group" method="POST" action="/items">
                     <label for="url">Enter an amazon item URL:</label>
-                    <input type="url" name="url" id="urlId" class="form-control"></br>
+                    <input type="url" name="url" class="form-control"></br>
                     <input type="submit" value="Add item">
                   </form> 
+                  <button type="button" id="update">Update All Prices</button>
               </div>
               <div class="col-lg-2"></div>    
             </div>
+            <br>
             <div class="row">
               <div class="col-lg-1"></div>
               <div class="col-lg-10">
@@ -53,7 +55,8 @@
         const buildIds = (item) => {
           return {
             listItemId: "ListItem_" + item._id,
-            deleteId: "Delete_" + item._id
+            deleteId: "Delete_" + item._id,
+            priceId: "Price_" + item._id
           }
         }
 
@@ -61,7 +64,7 @@
           return `<li class="list-group-item" id="${id.listItemId}">
                     <div class="row">
                         <div class="col-md-2">${item.name}</div>
-                        <div class="col-md-2">Price: ${item.currentPrice}</div>
+                        <div class="col-md-2" id="${id.priceId}">Price: ${item.currentPrice}</div>
                         <div class="col-md-2">
                           <img src=${item.img} alt="${item.name}" height="42" width="42"
                         </div>
@@ -81,6 +84,7 @@
             const ids = buildIds(item);
             itemsDisplay.append(buildTemplate(item,ids));
             deleteItem(item, ids.listItemId, ids.deleteId);
+            updateItems(item, ids.priceId);
           })
         }
 
@@ -90,6 +94,7 @@
           .then((response)=> {
             return response.json();
           }).then((data) => {
+            console.log(data);
             displayItems(data.items);
           })
         }
@@ -113,6 +118,25 @@
             }
           })
         }
+
+        //Update all items in database
+        const updateItems = (item, priceId) => {
+          let updateBtn = $(`#update`);
+          console.log(`/items/${item._id}`);
+          updateBtn.click(() => {
+            fetch(`items/${item._id}`,{
+              method: "put", 
+              headers: {"Content-Type" : "application/json; charset=utf-8"},
+              body: JSON.stringify({_id: item._id, url: item.url})
+            })
+            .then((response) => {
+              return response.json();
+          })
+          .then((data) => {
+            $(`#${priceId}`).html(`Price: ${data.request['updatedPrice']}`);
+          }
+          )})
+      }
 
       })
     </script>

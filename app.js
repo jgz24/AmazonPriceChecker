@@ -40,7 +40,7 @@ app.use((req, res, next) => {
   //Options request occurs before any other request
   //Tells the browser what kind of methods can be sent
   if (req.method === "OPTIONS") {
-    res.header("Acess-Control-Allow-Methods", "GET, POST, DELETE, PATCH");
+    res.header("Acess-Control-Allow-Methods", "GET, POST, DELETE, PUT");
     return res.status(200).json({});
   }
   next();
