@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const request = require("request");
 const puppeteer = require("puppeteer");
 
 const Item = require("../models/itemsModel");
@@ -38,7 +37,7 @@ exports.get_all_items = (req, res, next) => {
 
 //Function to post an item
 exports.post_item = (req, res, next) => {
-  const url = req.body.url;
+  const itemUrl = req.body.url;
 
   (async () => {
     const browser = await puppeteer.launch();
@@ -47,7 +46,9 @@ exports.post_item = (req, res, next) => {
 
     const productInfo = await page.evaluate(() => {
       return {
-        name: document.querySelector("#productTitle").innerText,
+        name: document
+          .querySelector("#productTitle")
+          .innerText.substring(0, 40),
         currentPrice: document.querySelector("#priceblock_ourprice").innerText,
         img: document.querySelector(".imgTagWrapper").children[0].currentSrc
       };
@@ -65,7 +66,7 @@ exports.post_item = (req, res, next) => {
     const item = new Item({
       _id: new mongoose.Types.ObjectId(),
       name: productInfo["name"],
-      url: url,
+      url: itemUrl,
       currentPrice: productInfo["currentPrice"],
       img: productInfo["img"]
     });
@@ -74,7 +75,7 @@ exports.post_item = (req, res, next) => {
     item
       .save()
       .then(result => {
-        console.log(result);
+        res.redirect("/");
         res.status(201).json({
           message: "Created item sucessfully",
           createdItem: {

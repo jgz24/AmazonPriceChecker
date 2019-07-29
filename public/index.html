@@ -34,7 +34,7 @@
               <div class="col-lg-1"></div>
               <div class="col-lg-10">
                 <div class="row-lg-12">
-                  <ul class="list-group list-group-horizontal" id="itemDisplay">
+                  <ul class="list-group" id="itemDisplay">
                   </ul>
                 </div>
               </div>
@@ -47,98 +47,7 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="./scripts/script.js" type="text/javascript"></script>
 
-    <script>
-      $(document).ready(() => {
-        const itemsDisplay = $('#itemDisplay');
-
-        const buildIds = (item) => {
-          return {
-            listItemId: "ListItem_" + item._id,
-            deleteId: "Delete_" + item._id,
-            priceId: "Price_" + item._id
-          }
-        }
-
-        const buildTemplate = (item,id) => {
-          return `<li class="list-group-item" id="${id.listItemId}">
-                    <div class="row">
-                        <div class="col-md-2">${item.name}</div>
-                        <div class="col-md-2" id="${id.priceId}">Price: ${item.currentPrice}</div>
-                        <div class="col-md-2">
-                          <img src=${item.img} alt="${item.name}" height="42" width="42"
-                        </div>
-                        <div class="col-md-2">
-                            <form action=${item.url}>
-                          <input type="submit" value="View on Amazon" />
-                        </form></div>
-                        <div class="col-md-2">
-                          <button type="button" id="${id.deleteId}">Delete Item</button>
-                        </div>
-
-                  </li>`
-        }
-
-        const displayItems = (data) => {
-          data.forEach((item) => {
-            const ids = buildIds(item);
-            itemsDisplay.append(buildTemplate(item,ids));
-            deleteItem(item, ids.listItemId, ids.deleteId);
-            updateItems(item, ids.priceId);
-          })
-        }
-
-        //Get items from database
-        const getItems = () => {
-          fetch('/items', {method: "GET"})
-          .then((response)=> {
-            return response.json();
-          }).then((data) => {
-            console.log(data);
-            displayItems(data.items);
-          })
-        }
-
-        getItems();
-
-        //Delete item from database
-        const deleteItem = (item, listItemId, deleteId) => {
-          let deleteBtn = $(`#${deleteId}`);
-          deleteBtn.click(() => {
-            const confirmDelete = confirm("Delete Item?");
-            if(confirmDelete) {
-              fetch(`items/${item._id}`, {
-              method: "delete"
-            }).then ((response) => {
-              if(response.status == 200) {
-                $(`#${listItemId}`).remove();
-              }
-              return response.json();
-            })
-            }
-          })
-        }
-
-        //Update all items in database
-        const updateItems = (item, priceId) => {
-          let updateBtn = $(`#update`);
-          console.log(`/items/${item._id}`);
-          updateBtn.click(() => {
-            fetch(`items/${item._id}`,{
-              method: "put", 
-              headers: {"Content-Type" : "application/json; charset=utf-8"},
-              body: JSON.stringify({_id: item._id, url: item.url})
-            })
-            .then((response) => {
-              return response.json();
-          })
-          .then((data) => {
-            $(`#${priceId}`).html(`Price: ${data.request['updatedPrice']}`);
-          }
-          )})
-      }
-
-      })
-    </script>
   </body>
 </html>
