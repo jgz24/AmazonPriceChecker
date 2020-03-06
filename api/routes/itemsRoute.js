@@ -1,6 +1,7 @@
 const {
   get_all_items,
   post_item,
+  update_item,
   delete_item
 } = require("../controllers/itemsController");
 
@@ -12,6 +13,9 @@ router.get("/", get_all_items);
 
 //Handles /items post requests
 router.post("/", post_item);
+
+// Handles /items update requests
+router.put("/:itemId", update_item);
 
 //Handles /items delete requests
 router.delete("/:itemId", delete_item);

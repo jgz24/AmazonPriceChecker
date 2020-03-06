@@ -37,6 +37,7 @@ $(document).ready(() => {
       const ids = buildIds(item);
       itemsDisplay.append(buildTemplate(item, ids));
       deleteItem(item, ids.listItemId, ids.deleteId);
+      updateItems(item, ids.priceId);
     });
   };
 
@@ -55,6 +56,26 @@ $(document).ready(() => {
               $(`#${listItemId}`).remove();
             }
           }
+        } catch (err) {
+          console.log({ message: err });
+        }
+      });
+    } catch (err) {
+      console.log({ message: err });
+    }
+  };
+
+  const updateItems = async (item, priceId) => {
+    try {
+      let updateBtn = $(`#update`);
+      updateBtn.click(async () => {
+        try {
+          const update = await fetch(`items/${item._id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json; charset=utf-8" },
+            body: JSON.stringify({ _id: item._id, url: item.url })
+          });
+          window.location.replace("/");
         } catch (err) {
           console.log({ message: err });
         }

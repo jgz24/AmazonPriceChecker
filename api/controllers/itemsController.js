@@ -58,11 +58,45 @@ post_item = async (req, res) => {
   }
 };
 
+//Function to update an item
+update_item = async (req, res) => {
+  try {
+    const id = req.body._id;
+    const url = req.body.url;
+
+    (async () => {
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      await page.goto(url);
+
+      const productInfo = await page.evaluate(() => {
+        return {
+          currentPrice: document.querySelector("#priceblock_ourprice").innerText
+        };
+      });
+
+      await browser.close();
+
+      const currentPrice = productInfo.currentPrice;
+
+      try {
+        const updateItem = await Item.updateOne(
+          { _id: id },
+          { $set: { currentPrice: currentPrice } }
+        );
+      } catch (err) {
+        console.log({ message: err });
+      }
+    })();
+  } catch (err) {
+    console.log({ message: err });
+  }
+};
+
 //Function to delete an item
 delete_item = async (req, res) => {
   try {
     const id = req.params.itemId;
-
     const deleteItem = await Item.deleteOne({ _id: id });
     res.json(deleteItem);
   } catch (err) {
@@ -70,4 +104,4 @@ delete_item = async (req, res) => {
   }
 };
 
-module.exports = { get_all_items, post_item, delete_item };
+module.exports = { get_all_items, post_item, update_item, delete_item };
