@@ -1,5 +1,12 @@
 # AmazonPriceChecker
 
-AmazonPriceChecker helps users determine whether an item on amazon is worth buying by tracking it. 
+## Description
+AmazonPriceChecker helps users determine whether an item on amazon is worth purchasing at that point in time by helping track its price. 
 
-CRUD functionality is prevalent, users are able to add items via amazon URL, prices of items can be updated, and lastly, items can be deleted on user command.
+The web application has complete CRUD functionality. In addition to getting the users current amazon items in the MongoDB database, users can add amazon items via their url, delete individual items and update the prices of all items.
+
+## Tools 
+Front end  - HTML, CSS, jQuery
+<br>
+Back end - Node, Express, MongoDB
+<br>
