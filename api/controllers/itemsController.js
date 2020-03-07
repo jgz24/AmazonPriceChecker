@@ -84,6 +84,7 @@ update_item = async (req, res) => {
           { _id: id },
           { $set: { currentPrice: currentPrice } }
         );
+        res.json({ currentPrice: currentPrice });
       } catch (err) {
         console.log({ message: err });
       }

@@ -13,21 +13,17 @@ $(document).ready(() => {
 
   //Template for how items should appear in webpage
   const buildTemplate = (item, id) => {
-    return `<li class="list-group-item" id="${id.listItemId}">
-                <div class="row">
-                    <div class="col-md-2">${item.name}</div>
-                    <div class="col-md-2">
-                      <img src=${item.img} alt="${item.name}" height="140" width="140">
+    return `<li id="${id.listItemId}">
+                <div>
+                    <p>${item.name}</p>
+                    <div>
+                      <img src=${item.img} alt="${item.name}">
                     </div>
-                    <div class="col-md-3" id="${id.priceId}">Price: ${item.currentPrice}</div>
-                    <div class="col-md-3">
-                        <form action=${item.url}>
-                      <input type="submit" value="View Item on Amazon" />
-                    </form></div>
-                    <div class="col-md-2">
-                      <button type="button" id="${id.deleteId}">Delete Item</button>
+                    <p id="${id.priceId}">Price: <strong>${item.currentPrice}</strong></p>
+                    <div class="buttonFlex">
+                        <a href=${item.url}><button>View On Amazon</button></a>
+                        <button id="${id.deleteId}">Delete Item</button>
                     </div>
-
               </li>`;
   };
 
@@ -75,7 +71,10 @@ $(document).ready(() => {
             headers: { "Content-Type": "application/json; charset=utf-8" },
             body: JSON.stringify({ _id: item._id, url: item.url })
           });
-          window.location.replace("/");
+          let result = await update.json();
+          $(`#${priceId}`).html(
+            `Price: <strong>${result.currentPrice}</strong>`
+          );
         } catch (err) {
           console.log({ message: err });
         }
